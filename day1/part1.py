@@ -1,3 +1,9 @@
+import sys
+import os.path
+#add helpers file to sys.path
+REPO = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(REPO)
+
 import helpers
 
 test_cases = [
@@ -15,7 +21,12 @@ test_cases = [
       263
     """,
     "solution": 7
-  }
+  },
+  {
+    "input": """
+    """,
+    "solution": 0
+  },
 ]
 
 OKGREEN = '\033[92m'
@@ -24,14 +35,15 @@ ENDC = '\033[0m'
 FAIL = '\033[91m'
 
 def main():
-  helpers.init()
+  helpers.init(__file__)
   for i, case in enumerate(test_cases):
     test(i, case["input"], case["solution"])
     solution = solve(read_input())
-  helpers.submit(solution)
+  helpers.submit(__file__, solution)
 
 def read_input():
-  f = open('./input.txt', 'r')
+  folder = helpers.get_day_folder((__file__))
+  f = open(f'{folder}/input.txt', 'r')
   return f.read().splitlines()
 
 def listify_test_input(test_input):

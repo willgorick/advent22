@@ -17,14 +17,16 @@ BOLD = '\033[1m'
 ENDC = '\033[0m'
 FAIL = '\033[91m'
 
-def _get_cookie_value() -> dict[str, str]:
-  with open(os.path.join(os.path.dirname(CWD), '.env')) as f:
+def _get_cookie_value(f) -> dict[str, str]:
+  with open(os.path.join(os.path.dirname(get_day_folder(f)), '.env')) as f:
     contents = f.read().strip()
   return {'Cookie': contents}
 
+def get_day_folder(f) -> str:
+  return os.path.dirname(f)
 
-def _get_input(day: int, year: int) -> str:
-  cookies = _get_cookie_value()
+def _get_input(f: str, day: int, year: int) -> str:
+  cookies = _get_cookie_value(f)
   url = f'https://adventofcode.com/{year}/day/{day}/input'
   try:
     response = requests.get(url, headers=cookies)
@@ -40,31 +42,31 @@ def _post_solution(answer: int, cookies: dict[str, str], part: int, day: int, ye
   resp = requests.post(url, data=params, headers=cookies)
   return resp.text
 
-def _get_day():
-  day_s = os.path.basename(CWD)
+def _get_day(f):
+  day_s = os.path.basename(get_day_folder(f))
   return int(day_s[3:])
 
-
-def _get_part():
-  curr_file = sys.argv[0]
+def _get_part(f):
+  curr_file = os.path.basename(f)
   return int(curr_file[4:-3])
 
-def init():
-  day = _get_day()
-  if not os.path.exists('./input.txt'):
-    print(f"\ndownloading input file for day {day}")
+def init(f: str):
+  day = _get_day(f)
+  folder = get_day_folder(f)
+  if not os.path.exists(os.path.join(folder, 'input.txt')):
+    print(f"downloading input file for day {day}")
     try:
-      s = _get_input(day, 2021)
-      with open('input.txt', 'w') as f:
+      s = _get_input(f, day, 2021)
+      with open(os.path.join(folder, 'input.txt'), 'w') as f:
         f.write(s)
     except Exception as e:
       print(e)
       exit()
   else:
-    print(f"\ninput file for day {day} already downloaded")
+    print(f"input file for day {day} already downloaded")
   
-def submit(answer: int):
-  response = _post_solution(answer, _get_cookie_value(), _get_part(), _get_day(), 2021)
+def submit(f: str, answer: int):
+  response = _post_solution(answer, _get_cookie_value(f), _get_part(f), _get_day(f), 2021)
   for error_regex in (WRONG, TOO_QUICK, ALREADY_DONE):
     error_match = error_regex.search(response)
     if error_match:
