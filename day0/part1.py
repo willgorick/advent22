@@ -1,11 +1,5 @@
 #TEMPLATE FILE 
-import sys
-import os.path
-#add helpers file to sys.path
-REPO = os.path.dirname(os.path.dirname(__file__))
-sys.path.append(REPO)
-
-import helpers
+from util import helpers
 
 test_cases = [ #add test cases here
   {
@@ -21,7 +15,7 @@ ENDC = '\033[0m'
 FAIL = '\033[91m'
 
 def main():
-  helpers.init()
+  helpers.init(__file__)
   failures = False
   for i, case in enumerate(test_cases):
     try:
@@ -32,21 +26,22 @@ def main():
   if failures:
     exit()
   solution = solve(read_input())
-  helpers.submit(solution)
+  helpers.submit(__file__, solution)
 
-def read_input():
-  f = open('./input.txt', 'r')
+def read_input() -> list[str]:
+  folder = helpers.get_day_folder((__file__))
+  f = open(f'{folder}/input.txt', 'r')
   return f.read().splitlines()
 
-def listify_test_input(test_input):
+def listify_test_input(test_input: str) -> list[str]:
   return test_input.split()
 
-def solve(inp):
+def solve(inp: list[str]) -> int:
   res = 0
   # Write solution here
   return res
 
-def test(i, test_input, test_solution):
+def test(i: int, test_input: str, test_solution: int):
   clean_input = listify_test_input(test_input)
   my_solution = solve(clean_input)
   try:

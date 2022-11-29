@@ -1,10 +1,4 @@
-import sys
-import os.path
-#add helpers file to sys.path
-REPO = os.path.dirname(os.path.dirname(__file__))
-sys.path.append(REPO)
-
-import helpers
+from util import helpers
 
 test_cases = [
   {
@@ -26,7 +20,7 @@ test_cases = [
     "input": """
     """,
     "solution": 0
-  },
+  }
 ]
 
 OKGREEN = '\033[92m'
