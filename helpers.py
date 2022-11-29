@@ -56,7 +56,7 @@ def init(f: str):
   if not os.path.exists(os.path.join(folder, 'input.txt')):
     print(f"downloading input file for day {day}")
     try:
-      s = _get_input(f, day, 2022)
+      s = _get_input(f, day, 2021)
       with open(os.path.join(folder, 'input.txt'), 'w') as f:
         f.write(s)
     except Exception as e:
@@ -66,7 +66,7 @@ def init(f: str):
     print(f"input file for day {day} already downloaded")
   
 def submit(f: str, answer: int):
-  response = _post_solution(answer, _get_cookie_value(f), _get_part(f), _get_day(f), 2022)
+  response = _post_solution(answer, _get_cookie_value(f), _get_part(f), _get_day(f), 2021)
   for error_regex in (WRONG, TOO_QUICK, ALREADY_DONE):
     error_match = error_regex.search(response)
     if error_match:
