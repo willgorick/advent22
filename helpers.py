@@ -17,12 +17,12 @@ BOLD = '\033[1m'
 ENDC = '\033[0m'
 FAIL = '\033[91m'
 
-def _get_cookie_value(f) -> dict[str, str]:
+def _get_cookie_value(f: str) -> dict[str, str]:
   with open(os.path.join(os.path.dirname(get_day_folder(f)), '.env')) as f:
     contents = f.read().strip()
   return {'Cookie': contents}
 
-def get_day_folder(f) -> str:
+def get_day_folder(f: str) -> str:
   return os.path.dirname(f)
 
 def _get_input(f: str, day: int, year: int) -> str:
@@ -42,11 +42,11 @@ def _post_solution(answer: int, cookies: dict[str, str], part: int, day: int, ye
   resp = requests.post(url, data=params, headers=cookies)
   return resp.text
 
-def _get_day(f):
+def _get_day(f: str):
   day_s = os.path.basename(get_day_folder(f))
   return int(day_s[3:])
 
-def _get_part(f):
+def _get_part(f: str):
   curr_file = os.path.basename(f)
   return int(curr_file[4:-3])
 

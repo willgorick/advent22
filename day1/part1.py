@@ -41,22 +41,22 @@ def main():
     solution = solve(read_input())
   helpers.submit(__file__, solution)
 
-def read_input():
+def read_input() -> list[str]:
   folder = helpers.get_day_folder((__file__))
   f = open(f'{folder}/input.txt', 'r')
   return f.read().splitlines()
 
-def listify_test_input(test_input):
+def listify_test_input(test_input: str) -> list[str]:
   return test_input.split()
 
-def solve(inp):
+def solve(inp: list[str]) -> int:
   res = 0
   for i in range(len(inp)):
     if i != 0 and int(inp[i]) > int(inp[i-1]):
       res += 1
   return res
 
-def test(i, test_input, test_solution):
+def test(i: int, test_input: str, test_solution: int):
   clean_input = listify_test_input(test_input)
   my_solution = solve(clean_input)
   try:
