@@ -1,4 +1,9 @@
 #TEMPLATE FILE 
+import sys
+import os.path
+#add helpers file to sys.path
+REPO = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(REPO)
 from util import helpers
 
 test_cases = [ #add test cases here
