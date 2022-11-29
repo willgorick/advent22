@@ -22,9 +22,16 @@ FAIL = '\033[91m'
 
 def main():
   helpers.init()
+  failures = False
   for i, case in enumerate(test_cases):
-    test(i, case["input"], case["solution"])
-    solution = solve(read_input())
+    try:
+      test(i, case["input"], case["solution"])
+    except AssertionError as ae:
+      failures = True
+      print(ae)
+  if failures:
+    exit()
+  solution = solve(read_input())
   helpers.submit(solution)
 
 def read_input():
@@ -43,10 +50,10 @@ def test(i, test_input, test_solution):
   clean_input = listify_test_input(test_input)
   my_solution = solve(clean_input)
   try:
-    assert test_solution == my_solution, f"{FAIL}case {i}: expected {test_solution} but got {my_solution}{ENDC}"
+    assert test_solution == my_solution, f"{FAIL}Case {i}: expected {test_solution} but got {my_solution}{ENDC}"
     print(f"{OKGREEN}Case {i} passed successfully{ENDC}")
   except AssertionError as ae:
-    print(ae)
+    raise(ae)
 
 
 if __name__ == "__main__":
