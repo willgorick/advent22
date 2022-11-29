@@ -1,20 +1,12 @@
+#TEMPLATE FILE 
+
 import helpers
 
-test_cases = [
+test_cases = [ #add test cases here
   {
     "input": """
-      199
-      200
-      208
-      210
-      200
-      207
-      240
-      269
-      260
-      263
     """,
-    "solution": 7
+    "solution": 0
   }
 ]
 
@@ -39,9 +31,7 @@ def listify_test_input(test_input):
 
 def solve(inp):
   res = 0
-  for i in range(len(inp)):
-    if i != 0 and int(inp[i]) > int(inp[i-1]):
-      res += 1
+  # Write solution here
   return res
 
 def test(i, test_input, test_solution):
