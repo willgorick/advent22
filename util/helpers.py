@@ -36,6 +36,17 @@ def _get_input(f: str, day: int, year: int) -> str:
     raise Exception("400 Error encountered downloading the input file")
   return response.text.strip()
 
+def _get_problem(f: str, day:int, year: int) -> str:
+  cookies = _get_cookie_value(f)
+  url = f'https://adventofcode.com/{year}/day/{day}'
+  try:
+    response = requests.get(url, headers=cookies)
+  except:
+    raise Exception("Unknown error encountered downloading the problem file")
+  if response.status_code >= 400:
+    raise Exception("400 Error encountered downloading the problem file")
+  return response.text.strip()
+
 def _post_solution(answer: int, cookies: dict[str, str], part: int, day: int, year: int) -> str:
   url = f"https://adventofcode.com/{year}/day/{day}/answer"
   params = {'level': part, 'answer': answer}
@@ -53,6 +64,7 @@ def _get_part(f: str):
 def init(f: str):
   day = _get_day(f)
   folder = get_day_folder(f)
+  part = _get_part(f)
   if not os.path.exists(os.path.join(folder, 'input.txt')):
     print(f"downloading input file for day {day}")
     try:
@@ -64,6 +76,20 @@ def init(f: str):
       exit()
   else:
     print(f"input file for day {day} already downloaded")
+
+  if not os.path.exists(os.path.join(folder, f'problem{part}.html')):
+    print(f"downloading the problem file for day {day} part {part}")
+    try:
+      s = _get_problem(f, day, 2022)
+      with open(os.path.join(folder, f'problem{part}.html'), 'w') as f:
+        f.write(s)
+        #add the stylesheet for live preview in your code editor of choice
+        f.write('<link rel="stylesheet" type="text/css" href="https://adventofcode.com/static/style.css?30"></script>')
+    except Exception as e:
+      print(e)
+      exit()
+  else:
+    print(f"problem file for day {day} already downloaded")
   
 def submit(f: str, answer: int):
   response = _post_solution(answer, _get_cookie_value(f), _get_part(f), _get_day(f), 2022)
