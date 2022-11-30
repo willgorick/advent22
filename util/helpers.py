@@ -18,15 +18,21 @@ ENDC = '\033[0m'
 FAIL = '\033[91m'
 
 def _get_cookie_value(f: str) -> dict[str, str]:
-  with open(os.path.join(os.path.dirname(get_day_folder(f)), '.env')) as f:
-    contents = f.read().strip()
+  try:
+    with open(os.path.join(os.path.dirname(get_day_folder(f)), '.env')) as env:
+      contents = env.read().strip()
+  except Exception as e:
+    raise e
   return {'Cookie': contents}
 
 def get_day_folder(f: str) -> str:
   return os.path.dirname(f)
 
 def _get_input(f: str, day: int, year: int) -> str:
-  cookies = _get_cookie_value(f)
+  try:
+    cookies = _get_cookie_value(f)
+  except Exception as e:
+    raise e
   url = f'https://adventofcode.com/{year}/day/{day}/input'
   try:
     response = requests.get(url, headers=cookies)
@@ -37,7 +43,10 @@ def _get_input(f: str, day: int, year: int) -> str:
   return response.text.strip()
 
 def _get_problem(f: str, day:int, year: int) -> str:
-  cookies = _get_cookie_value(f)
+  try:
+    cookies = _get_cookie_value(f)
+  except Exception as e:
+    raise e
   url = f'https://adventofcode.com/{year}/day/{day}'
   try:
     response = requests.get(url, headers=cookies)
@@ -69,8 +78,8 @@ def init(f: str):
     print(f"downloading input file for day {day}")
     try:
       s = _get_input(f, day, 2022)
-      with open(os.path.join(folder, 'input.txt'), 'w') as f:
-        f.write(s)
+      with open(os.path.join(folder, 'input.txt'), 'w') as input_file:
+        input_file.write(s)
     except Exception as e:
       print(e)
       exit()
@@ -81,10 +90,10 @@ def init(f: str):
     print(f"downloading the problem file for day {day} part {part}")
     try:
       s = _get_problem(f, day, 2022)
-      with open(os.path.join(folder, f'problem{part}.html'), 'w') as f:
-        f.write(s)
+      with open(os.path.join(folder, f'problem{part}.html'), 'w') as problem_file:
+        problem_file.write(s)
         #add the stylesheet for live preview in your code editor of choice
-        f.write('<link rel="stylesheet" type="text/css" href="https://adventofcode.com/static/style.css?30"></script>')
+        problem_file.write(f'<link rel="stylesheet" type="text/css" href="https://adventofcode.com/static/style.css?30"></script>')
     except Exception as e:
       print(e)
       exit()
@@ -92,7 +101,11 @@ def init(f: str):
     print(f"problem file for day {day} already downloaded")
   
 def submit(f: str, answer: int):
-  response = _post_solution(answer, _get_cookie_value(f), _get_part(f), _get_day(f), 2022)
+  try:
+    cookies = _get_cookie_value(f)
+  except Exception as e:
+    raise e
+  response = _post_solution(answer, cookies, _get_part(f), _get_day(f), 2022)
   for error_regex in (WRONG, TOO_QUICK, ALREADY_DONE):
     error_match = error_regex.search(response)
     if error_match:
