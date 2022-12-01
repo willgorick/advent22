@@ -33,7 +33,7 @@ class Solution:
     return f.read().splitlines()
 
   def listify_test_input(self, test_input: str) -> list[str]:
-    return test_input.split()
+    return test_input.split("\n")
 
   def solve(self, inp) -> int:
     res = 0

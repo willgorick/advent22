@@ -10,10 +10,12 @@ class Helper:
     self.part = self._get_part()
     self.local_input_file = f'{self.folder}/files/input.txt'
     self.local_problem_file = f'{self.folder}/files/problem{self.part}.html'
+    self.local_answers_file = f'{self.folder}/files/answer{self.part}.txt'
     self.cookies = {'Cookie': f'session={os.getenv("session")}'}
     self.refresh = False
     self.lite = False
     self.download = False
+    self.dry = False
     self.parse_args(args)
     self.year = 2022
 
@@ -109,17 +111,27 @@ class Helper:
       self.lite = True
     if "download" in args:
       self.download = True
+    if "dry" in args:
+      self.dry = True
     
   def submit(self, answer: int):
+    if self.dry:
+      with open(self.local_answers_file, 'a') as answers_file:
+          answers_file.write(f'DRY: {str(answer)}\n')
+      exit()
     response = self._post_solution(answer=answer)
     for error_regex in (self.WRONG, self.TOO_QUICK, self.ALREADY_DONE):
       error_match = error_regex.search(response)
       if error_match:
         print(f'\n{self.BOLD}{self.FAIL}{error_match[0]}{self.ENDC}{self.ENDC}')
+        with open(self.local_answers_file, 'a') as answers_file:
+          answers_file.write(f'WRONG: {str(answer)}\n')
         return
 
     if self.RIGHT in response:
       print(f'\n{self.BOLD}{self.OKGREEN}{self.RIGHT}{self.ENDC}{self.ENDC}')
+      with open(self.local_answers_file, 'a') as answers_file:
+          answers_file.write(f'RIGHT: {str(answer)}\n')
       return
     else:
       print(f'\n{response}')

@@ -7,11 +7,24 @@ sys.path.append(REPO)
 from solution import Solution
 
 TEST_CASES = [
-  {
-    "input": """
-    """,
-    "solution": 0
-  }
+{
+"input": """
+1000
+2000
+3000
+
+4000
+5000
+6000
+
+7000
+8000
+9000
+
+10000
+""",
+"solution": 24000
+}
 ]
   
 def main():
@@ -22,6 +35,14 @@ def main():
 class PartSolution(Solution):
   def solve(self, inp):
     res = 0
+    curr = 0
+    for _, cals_str in enumerate(inp):
+      if cals_str != "":
+        cals = int(cals_str)
+        curr += cals
+      else:
+        res = max(res, curr)
+        curr = 0
     return res
     
 
