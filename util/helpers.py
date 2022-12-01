@@ -1,6 +1,7 @@
 import os.path
 import requests
 import re
+from bs4 import BeautifulSoup
 
 class Helper:
   def __init__(self, f: str, args: list[str]):
@@ -108,6 +109,16 @@ class Helper:
       print(e)
       exit()
 
+  def _fetch_rank(self) -> str:
+    url = f'https://adventofcode.com/2022/leaderboard/self'
+    try:
+      response = requests.get(url, headers=self.headers)
+    except Exception as e:
+      raise e
+    soup = BeautifulSoup(response.text.strip(), 'html.parser')
+    ranks = soup.find_all('pre')
+    return ranks[self.day-1].get_text() 
+
   def parse_args(self, args: list[str]) -> None:
     if "refresh" in args:
       self.refresh = True
@@ -133,9 +144,10 @@ class Helper:
         return
 
     if self.RIGHT in response:
-      print(f'\n{self.BOLD}{self.OKGREEN}{self.RIGHT}{self.ENDC}{self.ENDC}')
+      print(f'\n{self.BOLD}{self.OKGREEN}{self.RIGHT}{self.ENDC}{self.ENDC}', end='\n')
       with open(self.local_answers_file, 'a') as answers_file:
           answers_file.write(f'RIGHT: {str(answer)}\n')
+      print(self._fetch_rank())
       return
     else:
       print(f'\n{response}')
