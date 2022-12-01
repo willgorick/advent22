@@ -70,6 +70,7 @@ class Helper:
     return response.text.strip()
 
   def _post_solution(self, answer: int) -> str:
+    print(f'Posting solution for day {self.day} part {self.part}: {answer}')
     url = f"https://adventofcode.com/{self.year}/day/{self.day}/answer"
     params = {'level': self.part, 'answer': answer}
     resp = requests.post(url, data=params, headers=self.headers)
