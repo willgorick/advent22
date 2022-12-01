@@ -15,7 +15,7 @@ class Helper:
     self.refresh = False
     self.lite = False
     self.parse_args(args)
-    self.year = 2022
+    self.year = 2021
 
     #codes for coloring/styling printed output
     self.OKGREEN = '\033[92m'
