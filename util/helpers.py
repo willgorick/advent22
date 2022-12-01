@@ -21,7 +21,7 @@ class Helper:
     self.download = False
     self.dry = False
     self.parse_args(args)
-    self.year = 2022
+    self.year = 2019
 
     #codes for coloring/styling printed output
     self.OKGREEN = '\033[92m'
