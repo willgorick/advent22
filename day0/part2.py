@@ -20,7 +20,7 @@ def main():
   solution.run()
   
 class PartSolution(Solution):
-  def solve(self, inp):
+  def solve(self, inp, test=False):
     res = 0
     #Write your own solution!
     return res
