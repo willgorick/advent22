@@ -14,6 +14,7 @@ class Helper:
     self.cookies = self._get_cookie_value()
     self.refresh = False
     self.lite = False
+    self.download = False
     self.parse_args(args)
     self.year = 2022
 
@@ -115,6 +116,8 @@ class Helper:
       self.refresh = True
     if "lite" in args:
       self.lite = True
+    if "download" in args:
+      self.download = True
     
   def submit(self, answer: int):
     response = self._post_solution(answer=answer)

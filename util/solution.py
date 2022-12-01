@@ -10,6 +10,8 @@ class Solution:
     self.failures = False
     
   def run(self):
+    if self.helper.download:
+      exit()
     for i in range(len(self.test_cases)):
       try:
         self.test(i)
