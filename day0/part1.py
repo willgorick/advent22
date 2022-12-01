@@ -1,4 +1,3 @@
-#TEMPLATE FILE 
 import sys
 import os.path
 #add helpers file to sys.path
@@ -6,54 +5,56 @@ REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
 from util import helpers
 
-test_cases = [ #add test cases here
-  {
-    "input": """
-    """,
-    "solution": 0
-  }
-]
-
-OKGREEN = '\033[92m'
-BOLD = '\033[1m'
-ENDC = '\033[0m'
-FAIL = '\033[91m'
-
 def main():
-  helpers.init(__file__)
-  failures = False
-  for i, case in enumerate(test_cases):
+  helper = helpers.Helper(__file__, sys.argv)
+  solution = Solution(helper)
+
+class Solution:
+  def __init__(self, helper: helpers.Helper):
+    self.helper = helper
+    self.input = self.read_input()
+    self.test_cases = [
+      {
+        "input": """
+        """,
+        "solution": 0
+      }
+    ]
+  
+    self.failures = False
+    for i in range(len(self.test_cases)):
+      try:
+        self.test(i)
+      except AssertionError as ae:
+        self.failures = True
+        print(ae)
+    if self.failures:
+      exit()
+    solution = self.solve(self.input)
+    helper.submit(solution)
+
+
+  def read_input(self) -> list[str]:
+    f = open(f'{self.helper.local_input_file}')
+    return f.read().splitlines()
+
+  def listify_test_input(self, test_input: str) -> list[str]:
+    return test_input.split()
+
+  def solve(self, inp) -> int:
+    res = 0
+    # Write solution here
+    return res
+
+  def test(self, i: int):
+    clean_input = self.listify_test_input(self.test_cases[i]["input"])
+    my_solution = self.solve(clean_input)
+    test_solution = self.test_cases[i]["solution"]
     try:
-      test(i, case["input"], case["solution"])
+      assert test_solution == my_solution, f"{self.helper.FAIL}Case {i}: expected {test_solution} but got {my_solution}{self.helper.ENDC}"
+      print(f"{self.helper.OKGREEN}Case {i} passed successfully{self.helper.ENDC}")
     except AssertionError as ae:
-      failures = True
-      print(ae)
-  if failures:
-    exit()
-  solution = solve(read_input())
-  helpers.submit(__file__, solution)
-
-def read_input() -> list[str]:
-  folder = helpers.get_day_folder((__file__))
-  f = open(f'{folder}/input.txt', 'r')
-  return f.read().splitlines()
-
-def listify_test_input(test_input: str) -> list[str]:
-  return test_input.split()
-
-def solve(inp: list[str]) -> int:
-  res = 0
-  # Write solution here
-  return res
-
-def test(i: int, test_input: str, test_solution: int):
-  clean_input = listify_test_input(test_input)
-  my_solution = solve(clean_input)
-  try:
-    assert test_solution == my_solution, f"{FAIL}Case {i}: expected {test_solution} but got {my_solution}{ENDC}"
-    print(f"{OKGREEN}Case {i} passed successfully{ENDC}")
-  except AssertionError as ae:
-    raise(ae)
+      raise(ae)
 
 
 if __name__ == "__main__":
