@@ -22,8 +22,8 @@ def main():
 class PartSolution(Solution):
   def solve(self, inp):
     res = 0
-    return res
     
+    return res
 
 if __name__ == "__main__":
   main()

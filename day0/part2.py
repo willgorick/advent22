@@ -7,11 +7,11 @@ sys.path.append(REPO)
 from solution import Solution
 
 TEST_CASES = [
-    {
-      "input": """
-      """,
-      "solution": 0
-    }
+  {
+    "input": """
+    """,
+    "solution": 0
+  }
 ]
   
 def main():
