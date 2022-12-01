@@ -11,7 +11,10 @@ class Helper:
     self.local_input_file = f'{self.folder}/files/input.txt'
     self.local_problem_file = f'{self.folder}/files/problem{self.part}.html'
     self.local_answers_file = f'{self.folder}/files/answer{self.part}.txt'
-    self.cookies = {'Cookie': f'session={os.getenv("session")}'}
+    self.headers = {
+      'Cookie':f'session={os.getenv("session")}' ,
+      'User-Agent':f'https://github.com/willgorick/advent22 by will.gorick@gmail.com'
+    }
     self.refresh = False
     self.lite = False
     self.download = False
@@ -49,7 +52,7 @@ class Helper:
   def _get_input(self) -> str:
     url = f'https://adventofcode.com/{self.year}/day/{self.day}/input'
     try:
-      response = requests.get(url, headers=self.cookies)
+      response = requests.get(url, headers=self.headers)
     except:
       raise Exception("Unknown error encountered downloading the input file")
     if response.status_code >= 400:
@@ -59,7 +62,7 @@ class Helper:
   def _get_problem(self) -> str:
     url = f'https://adventofcode.com/{self.year}/day/{self.day}'
     try:
-      response = requests.get(url, headers=self.cookies)
+      response = requests.get(url, headers=self.headers)
     except:
       raise Exception("Unknown error encountered downloading the problem file")
     if response.status_code >= 400:
@@ -69,7 +72,7 @@ class Helper:
   def _post_solution(self, answer: int) -> str:
     url = f"https://adventofcode.com/{self.year}/day/{self.day}/answer"
     params = {'level': self.part, 'answer': answer}
-    resp = requests.post(url, data=params, headers=self.cookies)
+    resp = requests.post(url, data=params, headers=self.headers)
     return resp.text
 
   def _get_day(self):
