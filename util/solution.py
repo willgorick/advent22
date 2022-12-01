@@ -8,11 +8,14 @@ class Solution:
     self.args = args
     self.helper = Helper(self.file, self.args)
     self.input = self.read_input()
+    if len(self.input) == 1:
+      self.input = self.comma_split_input(self.input[0])
     self.test_cases = []
     self.failures = False
     
   def run(self):
     if self.helper.download:
+      print(self.input)
       exit()
     for i in range(len(self.test_cases)):
       try:
@@ -32,17 +35,22 @@ class Solution:
     f = open(f'{self.helper.local_input_file}')
     return f.read().splitlines()
 
-  def listify_test_input(self, test_input: str) -> list[str]:
+  def newline_split_input(self, test_input: str) -> list[str]:
     return test_input.split("\n")
 
-  def solve(self, inp) -> int:
+  def comma_split_input(self, inp: str) -> list[str]:
+    return inp.split(',')
+
+  def solve(self, inp, test=False) -> int:
     res = 0
     #Write your own solve function!
     return res
 
   def test(self, i: int):
-    clean_input = self.listify_test_input(self.test_cases[i]["input"])
-    my_solution = self.solve(clean_input)
+    clean_input = self.newline_split_input(self.test_cases[i]["input"])
+    if len(clean_input) == 1:
+      clean_input = self.comma_split_input(clean_input[0])
+    my_solution = self.solve(clean_input, test=True)
     test_solution = self.test_cases[i]["solution"]
     try:
       assert test_solution == my_solution, f"{self.helper.FAIL}Case {i}: expected {test_solution} but got {my_solution}{self.helper.ENDC}"

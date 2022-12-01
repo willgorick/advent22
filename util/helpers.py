@@ -110,14 +110,15 @@ class Helper:
       exit()
 
   def _fetch_rank(self) -> str:
-    url = f'https://adventofcode.com/2022/leaderboard/self'
+    url = f'https://adventofcode.com/{self.year}/leaderboard/self'
     try:
       response = requests.get(url, headers=self.headers)
     except Exception as e:
       raise e
     soup = BeautifulSoup(response.text.strip(), 'html.parser')
     ranks = soup.find_all('pre')
-    return ranks[self.day-1].get_text() 
+    cleaned_rank = ranks[0].get_text().replace('&gt;', '>').replace('&lt;', '<')
+    print(cleaned_rank)
 
   def parse_args(self, args: list[str]) -> None:
     if "refresh" in args:
