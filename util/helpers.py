@@ -2,7 +2,6 @@ import os.path
 import requests
 import re
 
-
 class Helper:
   def __init__(self, f: str, args: list[str]):
     self.file = f
@@ -11,7 +10,7 @@ class Helper:
     self.part = self._get_part()
     self.local_input_file = f'{self.folder}/files/input.txt'
     self.local_problem_file = f'{self.folder}/files/problem{self.part}.html'
-    self.cookies = self._get_cookie_value()
+    self.cookies = {'Cookie': f'session={os.getenv("session")}'}
     self.refresh = False
     self.lite = False
     self.download = False
@@ -41,14 +40,6 @@ class Helper:
       print(f'Skipping download of problem file for day {self.day} because SPEED')
     else:
       print(f"Problem file for day {self.day} already downloaded")
-
-  def _get_cookie_value(self) -> dict[str, str]:
-    try:
-      with open(os.path.join(os.path.dirname(self.folder), '.env')) as env:
-        contents = env.read().strip()
-    except Exception as e:
-      raise e
-    return {'Cookie': contents}
 
   def get_day_folder(self) -> str:
     return os.path.dirname(self.file)

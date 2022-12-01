@@ -1,4 +1,6 @@
 from helpers import Helper
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())   
 
 class Solution:
   def __init__(self, f: str, args: list[str]):
