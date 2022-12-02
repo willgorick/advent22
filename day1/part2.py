@@ -4,6 +4,7 @@ from heapq import *
 
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
+sys.path.append(f'{REPO}/util')
 
 from solution import Solution
 
@@ -35,7 +36,7 @@ def main():
   solution.run()
   
 class PartSolution(Solution):
-  def solve(self, inp):
+  def solve(self, inp, test=False):
     heap = []
     curr = 0
     for _, cals_str in enumerate(inp):
