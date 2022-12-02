@@ -3,6 +3,7 @@ import os.path
 
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
+sys.path.append(f'{REPO}/util')
 
 from solution import Solution
 
