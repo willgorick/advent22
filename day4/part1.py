@@ -40,6 +40,9 @@ class PartSolution(Solution):
         res += 1
         
     return res
+
+  def solve_one_line(self, inp):
+    return sum(any ([ranges[0][0] <= ranges[1][0] and ranges[1][1] <= ranges[0][1], ranges[1][0] <= ranges[0][0] and ranges[0][1] <= ranges[1][1]]) for ranges in [[[int(sub_val) for sub_val in val.split('-')] for val in split] for split in [pair.split(',') for pair in inp]])
     
 
 if __name__ == "__main__":
