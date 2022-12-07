@@ -1,13 +1,14 @@
 from collections import defaultdict
 
 class Directory():
-  def __init__(self, name: str, children: defaultdict, res: int, parent=None):
+  def __init__(self, name: str, children: defaultdict, res: int, parent=None, root=None):
     self.children = children
     self.parent = parent
     self.name = name
     self.type = "dir"
     self.res = res
     self.size_list = []
+    self.root = root
 
   def print_dfs(self, ind):
     if ind == 0:
@@ -29,18 +30,9 @@ class Directory():
       if child.type == "dir":
         curr_sum += child.count_dfs()
     if curr_sum < 100000:
-      self.set_parent("res", curr_sum)
-    self.set_parent("size_list", curr_sum, True)
+      self.root.res += curr_sum
+    self.root.size_list.append(curr_sum)
     return curr_sum
-
-  def set_parent(self, field_name, value, append: bool = False):
-    tmp = self
-    while tmp.parent:
-      tmp = tmp.parent
-    if not append:
-      tmp.__dict__[field_name] += value
-    else:
-      tmp.__dict__[field_name].append(value)
 
 class File():
   def __init__(self, name: str, size: int, parent: Directory):
@@ -51,7 +43,8 @@ class File():
 
 
 def create_dir(inp: list[str]):
-    curr_dir = Directory("/", {}, 0, None)
+    curr_dir = Directory("/", {}, 0)
+    curr_dir.root = curr_dir
     for i in range(len(inp)):
       line = inp[i]
       #commands
@@ -82,7 +75,7 @@ def create_dir(inp: list[str]):
           curr_dir.children[second] = (File(second, int(first), curr_dir))
         #dir
         else:
-          curr_dir.children[second] = Directory(second, {}, 0, curr_dir)
+          curr_dir.children[second] = Directory(second, {}, 0, curr_dir, curr_dir.root)
 
     while curr_dir.parent:
         curr_dir = curr_dir.parent
