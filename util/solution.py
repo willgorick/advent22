@@ -3,23 +3,25 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())   
 
 class Solution:
-  def __init__(self, f: str, args: list[str]):
+  def __init__(self, f: str, args: list[str], parsing_params=None):
     self.file = f
     self.args = args
     self.helper = Helper(self.file, self.args)
     self.input = self.read_input()
     if len(self.input) == 1:
       self.input = self.comma_split_input(self.input[0])
+    if parsing_params == "2d":
+      self.input = self.grid_input(self.input)
     self.test_cases = []
     self.failures = False
     
-  def run(self):
+  def run(self, parsing_params=None):
     if self.helper.download:
       print(self.input)
       exit()
     for i in range(len(self.test_cases)):
       try:
-        self.test(i)
+        self.test(i, parsing_params)
       except AssertionError as ae:
         self.failures = True
         print(ae)
@@ -41,15 +43,22 @@ class Solution:
   def comma_split_input(self, inp: str) -> list[str]:
     return inp.split(',')
 
+  def grid_input(self, inp) -> list[list[str]]:
+    for i in range(len(inp)):
+      inp[i] = [int(x) for x in inp[i]]
+    return inp
+
   def solve(self, inp, test=False) -> int:
     res = 0
     #Write your own solve function!
     return res
 
-  def test(self, i: int):
+  def test(self, i: int, parsing_params = None):
     clean_input = self.newline_split_input(self.test_cases[i]["input"])
     if len(clean_input) == 1:
       clean_input = self.comma_split_input(clean_input[0])
+    if parsing_params == "2d":
+      clean_input = self.grid_input(clean_input)
     my_solution = self.solve(clean_input, test=True)
     test_solution = self.test_cases[i]["solution"]
     try:
