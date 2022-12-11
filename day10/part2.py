@@ -166,30 +166,33 @@ def main():
   
 class PartSolution(Solution):
   def solve(self, inp, test=False):
-    #result, line in input, clock cycle, addend
-    res, inp_line, register, addend = 0, 0, 1, 0
-    res = [['.'] * 40 for _ in range(6)]
+    clock_cycle, register, addend = 0, 1, 0
+    res = ["."] * 240
 
-    adding = False
-    for clock_cycle in range(1, 241):
-      rel_clock_cycle = clock_cycle % 40
-      if register <= rel_clock_cycle and rel_clock_cycle <= register+2:
-        row = (clock_cycle) // 40
-        col = (clock_cycle % 40) -1 
-        res[row][col] = "#"
-      instruction = inp[inp_line]
+    def write(register: int, clock_cycle: int):
+      if register-1 <= clock_cycle % 40 <= register+1:
+        res[clock_cycle] = "#"
+
+    for instruction in inp:
       if instruction == "noop":
-        inp_line += 1
-      elif instruction[0:4] == "addx" and not adding:
+        write(register, clock_cycle)
+        clock_cycle += 1
+      else:
         addend = int(instruction[5:])
-        adding = True
-      elif instruction[0:4] == "addx" and adding: #we added this value last round
+        write(register, clock_cycle)
+        clock_cycle += 1
+        write(register, clock_cycle)
+        clock_cycle += 1
         register += addend
-        inp_line += 1
-        adding = False
-    for i in range(len(res)):
-      print("".join(res[i]))
+
+    self.display(res)
     return res
+
+  def display(self, res):
+    for row in range(6):
+      start = row * 40
+      end = start + 40
+      print(''.join(res[start:end]))
     
 
 if __name__ == "__main__":
