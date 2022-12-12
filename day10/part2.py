@@ -174,12 +174,11 @@ class PartSolution(Solution):
         res[clock_cycle] = "#"
 
     for instruction in inp:
+      write(register, clock_cycle)
       if instruction == "noop":
-        write(register, clock_cycle)
         clock_cycle += 1
       else:
         addend = int(instruction[5:])
-        write(register, clock_cycle)
         clock_cycle += 1
         write(register, clock_cycle)
         clock_cycle += 1
