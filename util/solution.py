@@ -14,6 +14,7 @@ class Solution:
       self.input = self.grid_input(self.input)
     self.test_cases = []
     self.failures = False
+    self.dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
     
   def run(self, parsing_params=None):
     if self.helper.download:
