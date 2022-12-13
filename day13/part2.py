@@ -105,7 +105,6 @@ class PartSolution(Solution):
   def solve(self, inp, test=False):
     packet_list = []
     for i in range(0, len(inp), 3):
-      ind = i//3 + 1
       left = inp[i]
       right = inp[i+1]
       l_packet = Packet(self.parse_nested_list(left))
