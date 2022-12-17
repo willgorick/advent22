@@ -1,7 +1,8 @@
 import sys
 import os.path
 import re
-from collections import deque, defaultdict
+from collections import defaultdict
+import time 
 
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
@@ -50,15 +51,14 @@ class PartSolution(Solution):
       if flow > 0:
         self.valves_to_open.add(source)
     
+    tic = time.perf_counter()
     self.dfs(1, "AA", 0)
+    toc = time.perf_counter()
+    print(f"took {toc - tic:0.4f} seconds")
     print(self.res)
     return self.res
 
   def dfs(self, mins: int, curr: str, total: int):
-    #prune this branch, we've already gotten here with a higher total
-    if self.visited[(mins, curr)] >= total:
-      return
-
     #set (mins, curr) to my total if not visited or visited with lower total
     self.visited[(mins, curr)] = total
 
@@ -74,13 +74,18 @@ class PartSolution(Solution):
     if curr not in self.opened_valves and self.flows[curr]:
       #add curr to opened valves, dfs with opening this valve, 
       #then remove it before testing going straight to its neighbors
-      self.opened_valves.add(curr)
-      self.dfs(mins+1, curr, total + tick_rate + self.flows[curr])
-      self.opened_valves.remove(curr)
+
+      #prune this branch, we've already gotten here with a higher total
+      if self.visited[(mins+1, curr)] < total + tick_rate + self.flows[curr]:
+        self.opened_valves.add(curr)
+        self.dfs(mins+1, curr, total + tick_rate + self.flows[curr])
+        self.opened_valves.remove(curr)
     
     #test each neighbor
     for neighbor in self.graph[curr]:
-      self.dfs(mins+1, neighbor, tick_rate + total)
+      #prune this branch, we've already gotten here with a higher total
+      if self.visited[(mins+1, neighbor)] < total + tick_rate:
+        self.dfs(mins+1, neighbor, tick_rate + total)
 
 if __name__ == "__main__":
   main()

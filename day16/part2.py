@@ -1,7 +1,8 @@
 import sys
 import os.path
 import re
-from collections import deque, defaultdict
+from collections import defaultdict
+import time 
 
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
@@ -33,6 +34,7 @@ def main():
 class PartSolution(Solution):
   def solve(self, inp, test=False):
     self.res = 0
+    self.a = 0
     self.graph = {}
     self.flows = {}
     self.valves_to_open = set()
@@ -49,8 +51,10 @@ class PartSolution(Solution):
       self.flows[source] = flow
       if flow > 0:
         self.valves_to_open.add(source)
-    
+    tic = time.perf_counter()
     self.dfs(1, "AA", "AA", 0)
+    toc = time.perf_counter()
+    print(f"took {toc - tic:0.4f} seconds")
     print(self.res)
     return self.res
 
@@ -83,13 +87,15 @@ class PartSolution(Solution):
 
       #elephant can choose to open his valve
       if elephant not in self.opened_valves and self.flows[elephant]:
-        self.opened_valves.add(elephant)
-        self.dfs(mins+1, curr, elephant, total+self.flows[elephant]+self.flows[curr])
-        #remove elephant so we can consider elephant moving instead
-        self.opened_valves.remove(elephant)
+        if self.visited[(mins+1, curr, elephant)] < total+self.flows[elephant]+self.flows[curr]:
+          self.opened_valves.add(elephant)
+          self.dfs(mins+1, curr, elephant, total+self.flows[elephant]+self.flows[curr])
+          #remove elephant so we can consider elephant moving instead
+          self.opened_valves.remove(elephant)
       
       for elephant_neighbor in self.graph[elephant]:
-        self.dfs(mins+1, curr, elephant_neighbor, total+self.flows[curr])
+        if self.visited[(mins+1, curr, elephant_neighbor)] < total+self.flows[curr]:
+          self.dfs(mins+1, curr, elephant_neighbor, total+self.flows[curr])
 
       self.opened_valves.remove(curr)
     
@@ -97,13 +103,15 @@ class PartSolution(Solution):
     for neighbor in self.graph[curr]:
       #elephant can choose to open his valve
       if elephant not in self.opened_valves and self.flows[elephant]:
-        self.opened_valves.add(elephant)
-        self.dfs(mins+1, neighbor, elephant, total+self.flows[elephant])
-        self.opened_valves.remove(elephant)
+        if self.visited[(mins+1, neighbor, elephant)] < total+self.flows[elephant]:
+          self.opened_valves.add(elephant)
+          self.dfs(mins+1, neighbor, elephant, total+self.flows[elephant])
+          self.opened_valves.remove(elephant)
 
       #elephant can also choose to move instead of opening his valve
       for elephant_neighbor in self.graph[elephant]:
-        self.dfs(mins+1, neighbor, elephant_neighbor, total)
+        if self.visited[(mins+1, neighbor, elephant_neighbor)] < total:
+          self.dfs(mins+1, neighbor, elephant_neighbor, total)
 
 if __name__ == "__main__":
   main()
