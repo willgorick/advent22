@@ -2,6 +2,7 @@ from collections import defaultdict
 import sys
 import os.path
 import re
+import time
 
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
@@ -42,6 +43,7 @@ class PartSolution(Solution):
     else:
       check_y = 2000000
 
+    tic = time.perf_counter()    
     for line in inp:
       m = re.match(r"Sensor at x=(-?[0-9]*), y=(-?[0-9]*): closest beacon is at x=(-?[0-9]*), y=(-?[0-9]*)", line)
       sensor = (int(m.group(1)), int(m.group(2)))
@@ -55,8 +57,9 @@ class PartSolution(Solution):
           if (sensor[0]-x, check_y) != beacon and (sensor[0]-x, check_y) != sensor:
             self.check_set.add(sensor[0]-x)
 
-
     res = len(self.check_set)
+    toc = time.perf_counter()
+    print(f"took {toc - tic:0.4f} seconds")
     print(res)
     return res
   

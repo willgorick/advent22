@@ -2,6 +2,7 @@ from collections import defaultdict
 import sys
 import os.path
 import re
+import time
 
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
@@ -43,6 +44,7 @@ class PartSolution(Solution):
       check_y = 20
     else:
       check_y = 4000000
+    tic = time.perf_counter()
 
     for line in inp:
       print(line)
@@ -60,6 +62,8 @@ class PartSolution(Solution):
     for i in range(check_y):
       possible_res = self.merge_intervals(self.impossible[i], i)
       if possible_res != -1:
+        toc = time.perf_counter()
+        print(f"took {toc - tic:0.4f} seconds")
         return res * possible_res[1] + possible_res[0]
   
   def merge_intervals(self, intervals: set, y: int):
