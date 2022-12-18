@@ -57,7 +57,7 @@ class PartSolution(Solution):
         surface_area_candidates[(x, y, z+1)] += 1
       if (x, y, z-1) not in cube_set:
         surface_area_candidates[(x, y, z-1)] += 1
-    
+    print(f"part1: {sum(count for _, count in surface_area_candidates.items())}")
     self.bfs_water(0, 0, 0)
     
     res = 0
@@ -65,6 +65,7 @@ class PartSolution(Solution):
       x, y, z = candidate
       if self.grid[x][y][z] == "~":
         res += count
+    print(f"part2: {res}")
     return res
     
   def bfs_water(self, x, y, z):
