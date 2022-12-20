@@ -7,6 +7,7 @@ sys.path.append(f'{REPO}/util')
 
 from solution import Solution
 from mix import mix_values
+from time import perf_counter
 
 TEST_CASES = [
 {
@@ -30,8 +31,11 @@ def main():
   
 class PartSolution(Solution):
   def solve(self, inp, test=False):
-
-    return mix_values(10, DECRYPTION_KEY, inp)
+    tic = perf_counter()
+    res = mix_values(10, DECRYPTION_KEY, inp)
+    toc = perf_counter()
+    print(f"took {toc - tic:0.4f} seconds")
+    return res
     
 
 if __name__ == "__main__":

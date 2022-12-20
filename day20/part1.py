@@ -1,6 +1,6 @@
 import sys
 import os.path
-
+from time import perf_counter
 REPO = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(REPO)
 sys.path.append(f'{REPO}/util')
@@ -34,8 +34,11 @@ def main():
   
 class PartSolution(Solution):
   def solve(self, inp, test=False):
-
-    return mix_values(1, 1, inp)
+    tic = perf_counter()
+    res = mix_values(1, 1, inp)
+    toc = perf_counter()
+    print(f"took {toc - tic:0.4f} seconds")
+    return res
     
 
 if __name__ == "__main__":
