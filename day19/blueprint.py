@@ -28,18 +28,15 @@ class Blueprint:
     if (mins, ore_bot, clay_bot, obsidian_bot, geode_bot, ore_count, clay_count, obsidian_count, geode_count) in self.visited:
       return
     self.visited.add((mins, ore_bot, clay_bot, obsidian_bot, geode_bot, ore_count, clay_count, obsidian_count, geode_count))
+    #building something on the last step doesn't matter
     if mins == 1:
-      self.get_quality_level(mins-1, ore_bot, clay_bot, obsidian_bot, geode_bot, ore_count+ore_bot, clay_count+clay_bot, obsidian_count+obsidian_bot, geode_count+geode_bot)
-      return
-
-    if mins == 0:
-      self.max = max(self.max, geode_count)
+      self.max = max(self.max, geode_count+geode_bot)
       return
 
     total_geodes_possible = geode_count
     for i in range(mins):
       total_geodes_possible += geode_bot + i
-    if total_geodes_possible < self.max: 
+    if total_geodes_possible < self.max:
       return
 
     geode = False
