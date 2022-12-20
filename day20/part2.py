@@ -34,7 +34,7 @@ class PartSolution(Solution):
     tic = perf_counter()
     res = mix_values(10, DECRYPTION_KEY, inp)
     toc = perf_counter()
-    print(f"took {toc - tic:0.4f} seconds")
+    print(f"took {toc - tic:0.6f} seconds")
     return res
     
 
