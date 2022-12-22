@@ -51,7 +51,7 @@ class Elf:
     return f"{self.name}: {self.elves[0]} {self.operand} {self.elves[1]}"
 
 class Operation:
-  def __init__(self, a, b, operand: str):
+  def __init__(self, a=None, b=None, operand: str=None):
     self.a = a
     self.b = b
     self.operand = operand
@@ -133,8 +133,6 @@ class PartSolution(Solution):
           res = x // res
         else:
           res *= x
-      if type(y) == deque:
-        op_stack = y
 
     print(res)
     return res
@@ -143,8 +141,9 @@ class PartSolution(Solution):
     curr_elf = self.graph[elf_name]
     if curr_elf.number:
       if curr_elf.name == "humn":
-        curr_elf.equation_stack = "x"
-        return deque(["x"])
+        curr_elf.equation_stack = deque()
+        curr_elf.equation_stack.append(Operation("x"))
+        return
       else:
         return curr_elf.number
     a, b = curr_elf.elves 
@@ -165,7 +164,12 @@ class PartSolution(Solution):
       a_val = self.graph[a].equation_stack if self.graph[a].equation_stack else self.graph[a].number
       b_val = self.graph[b].equation_stack if self.graph[b].equation_stack else self.graph[b].number
       curr_elf.equation_string = f"{a_val} {curr_elf.operand} {b_val}"
-      curr_elf.equation_stack = deque([Operation(a_val, b_val, curr_elf.operand)])
+      if type(a_val) == deque:
+        a_val.append(Operation(None, b_val, curr_elf.operand))
+        curr_elf.equation_stack = a_val
+      else:
+        b_val.append(Operation(a_val, None, curr_elf.operand))
+        curr_elf.equation_stack = b_val
       return curr_elf.equation_stack
 
   def dfs_check_for_humn(self, elf_name: str):
